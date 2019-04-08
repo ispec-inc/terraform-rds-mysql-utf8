@@ -1,6 +1,5 @@
 variable "port" {
   description = "publish port"
-  type        = "number"
   default     = 3306
 }
 
