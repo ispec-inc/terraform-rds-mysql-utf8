@@ -75,8 +75,8 @@ resource "aws_security_group" "db" {
 
 resource "aws_security_group_rule" "db" {
   type              = "ingress"
-  from_port         = var.port
-  to_port           = var.port
+  from_port         = "${var.port}"
+  to_port           = "${var.port}"
   protocol          = "tcp"
   cidr_blocks       = ["0.0.0.0/0"]
   security_group_id = "${aws_security_group.db.id}"
