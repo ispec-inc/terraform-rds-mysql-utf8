@@ -20,10 +20,10 @@ variable "instance_class" {
   default     = "db.t2.micro"
 }
 
-variable "db_subnet_group_name" {
-  default = "default"
-}
-
 variable "vpc_id" {
   description = "VPCID to which the RDS belogs"
+}
+
+variable "subnet_ids" {
+  type = "list"
 }

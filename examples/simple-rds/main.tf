@@ -6,13 +6,15 @@ module "rds-mysql-utf8" {
   # source = "git@github.com:ispec-inc/terraform-rds-mysql-utf8.git"
   source = "../../"
 
-  port                 = 3306
-  username             = "test_user"
-  password             = "remember_test_user"
-  db_name              = "test-mysql"
-  instance_class       = "db.t2.micro"
-  db_subnet_group_name = "default"
-  vpc_id               = "${aws_vpc.test_vpc.id}"
+  port           = 3306
+  username       = "test_user"
+  password       = "remember_test_user"
+  db_name        = "testdb"
+  instance_class = "db.t2.micro"
+
+  vpc_id = "${aws_vpc.test_vpc.id}"
+
+  subnet_ids = ["${aws_subnet.public_subnet_1a.id}", "${aws_subnet.public_subnet_1b.id}"]
 }
 
 resource "aws_vpc" "test_vpc" {
@@ -22,33 +24,43 @@ resource "aws_vpc" "test_vpc" {
   enable_dns_hostnames = true
 }
 
-resource "aws_subnet" "private_db1" {
-  vpc_id            = "${aws_vpc.test_vpc.id}"
-  cidr_block        = "10.0.1.0/24"
-  availability_zone = "ap-northeast-1a"
+resource "aws_internet_gateway" "igw" {
+  vpc_id = "${aws_vpc.test_vpc.id}"
 }
 
-resource "aws_subnet" "private_db2" {
-  vpc_id            = "${aws_vpc.test_vpc.id}"
-  cidr_block        = "10.0.2.0/24"
-  availability_zone = "ap-northeast-1c"
-}
+resource "aws_route_table" "route_igw" {
+  vpc_id = "${aws_vpc.test_vpc.id}"
 
-resource "aws_security_group" "db" {
-  name        = "mysql_server"
-  description = "It is a security group on db of tf_vpc."
-  vpc_id      = "${aws_vpc.test_vpc.id}"
-
-  tags {
-    Name = "tf_db"
+  route {
+    cidr_block = "0.0.0.0/0"
+    gateway_id = "${aws_internet_gateway.igw.id}"
   }
 }
 
-resource "aws_security_group_rule" "db" {
-  type              = "ingress"
-  from_port         = 3306
-  to_port           = 3306
-  protocol          = "tcp"
-  cidr_blocks       = ["0.0.0.0/0"]
-  security_group_id = "${aws_security_group.db.id}"
+# Public Subnet on us-east-1a
+resource "aws_subnet" "public_subnet_1a" {
+  vpc_id                  = "${aws_vpc.test_vpc.id}"
+  cidr_block              = "10.0.0.0/20"
+  map_public_ip_on_launch = true
+  availability_zone       = "ap-northeast-1a"
+}
+
+# Public Subnet on us-east-1b
+resource "aws_subnet" "public_subnet_1b" {
+  vpc_id                  = "${aws_vpc.test_vpc.id}"
+  cidr_block              = "10.0.16.0/20"
+  map_public_ip_on_launch = true
+  availability_zone       = "ap-northeast-1c"
+}
+
+# Associate subnet public_subnet_us_east_1a to public route table
+resource "aws_route_table_association" "public_subnet_1a_association" {
+  subnet_id      = "${aws_subnet.public_subnet_1a.id}"
+  route_table_id = "${aws_route_table.route_igw.id}"
+}
+
+# Associate subnet public_subnet_us_east_1b to public route table
+resource "aws_route_table_association" "public_subnet_1b_association" {
+  subnet_id      = "${aws_subnet.public_subnet_1b.id}"
+  route_table_id = "${aws_route_table.route_igw.id}"
 }

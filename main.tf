@@ -13,9 +13,12 @@ module "db" {
   publicly_accessible     = true
   backup_retention_period = 1
   skip_final_snapshot     = true
-  db_subnet_group_name    = "${var.db_subnet_group_name}"
   major_engine_version    = "5.7"
 
+  vpc_security_group_ids = ["${aws_security_group.db.id}"]
+  subnet_ids             = ["${var.subnet_ids}"]
+
+  name     = "${var.db_name}"
   password = "${var.password}"
   username = "${var.username}"
   port     = "${var.port}"
@@ -70,7 +73,6 @@ module "db" {
   ]
 }
 
-# RDB Security Group
 resource "aws_security_group" "db" {
   name        = "db_server"
   description = "It is a security group on db of tf_vpc."
