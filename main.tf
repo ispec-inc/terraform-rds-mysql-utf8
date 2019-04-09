@@ -13,10 +13,14 @@ module "db" {
   publicly_accessible     = true
   backup_retention_period = 1
   skip_final_snapshot     = true
+  db_subnet_group_name    = "${var.db_subnet_group_name}"
+  major_engine_version    = "5.7"
 
   password = "${var.password}"
   username = "${var.username}"
   port     = "${var.port}"
+
+  family = "mysql5.7"
 
   parameters = [
     {
