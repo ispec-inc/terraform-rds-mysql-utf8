@@ -3,5 +3,6 @@
   <component name="VcsDirectoryMappings">
     <mapping directory="" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/examples/simple-rds/.terraform/modules/9a8a27bcb124208c9bc6aba1215370c8" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/examples/simple-rds/.terraform/modules/c0628e84955aa16cc15523243ff06e68" vcs="Git" />
   </component>
 </project>
