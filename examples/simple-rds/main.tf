@@ -9,7 +9,7 @@ module "rds-mysql-utf8" {
   port           = 3306
   username       = "test_user"
   password       = "remember_test_user"
-  db_name        = "testdb"
+  db_name        = "test"
   instance_class = "db.t2.micro"
 
   vpc_id = "${aws_vpc.test_vpc.id}"
