@@ -74,7 +74,7 @@ module "rds" {
 }
 
 resource "aws_security_group" "db" {
-  name        = "db_server"
+  name        = "db_${var.db_name}_server"
   description = "It is a security group on db of tf_vpc."
   vpc_id      = "${var.vpc_id}"
 }
