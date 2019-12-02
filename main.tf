@@ -9,19 +9,19 @@ module "rds" {
   engine_version     = "5.7"
   maintenance_window = "Mon:00:00-Mon:03:00"
 
-  instance_class          = "${var.instance_class}"
+  instance_class          = var.instance_class
   publicly_accessible     = true
   backup_retention_period = 1
   skip_final_snapshot     = true
   major_engine_version    = "5.7"
 
-  vpc_security_group_ids = ["${aws_security_group.db.id}"]
-  subnet_ids             = ["${var.subnet_ids}"]
+  vpc_security_group_ids = [aws_security_group.db.id]
+  subnet_ids             = [var.subnet_ids]
 
-  name     = "${var.db_name}"
-  password = "${var.password}"
-  username = "${var.username}"
-  port     = "${var.port}"
+  name     = var.db_name
+  password = var.password
+  username = var.username
+  port     = var.port
 
   family = "mysql5.7"
 
@@ -76,14 +76,15 @@ module "rds" {
 resource "aws_security_group" "db" {
   name        = "db_${var.db_name}_server"
   description = "It is a security group on db of tf_vpc."
-  vpc_id      = "${var.vpc_id}"
+  vpc_id      = var.vpc_id
 }
 
 resource "aws_security_group_rule" "db" {
   type              = "ingress"
-  from_port         = "${var.port}"
-  to_port           = "${var.port}"
+  from_port         = var.port
+  to_port           = var.port
   protocol          = "tcp"
   cidr_blocks       = ["0.0.0.0/0"]
-  security_group_id = "${aws_security_group.db.id}"
+  security_group_id = aws_security_group.db.id
 }
+
