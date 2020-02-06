@@ -1,6 +1,6 @@
 module "rds" {
   source  = "terraform-aws-modules/rds/aws"
-  version = "1.22.0"
+  version = "2.13.0"
 
   identifier         = "${var.db_name}-db"
   allocated_storage  = 5
@@ -12,11 +12,13 @@ module "rds" {
   instance_class          = var.instance_class
   publicly_accessible     = true
   backup_retention_period = 1
-  skip_final_snapshot     = true
   major_engine_version    = "5.7"
+  multi_az = true
+  skip_final_snapshot = false
+  final_snapshot_identifier = "${var.db_name}-db-snpshot"
 
   vpc_security_group_ids = [aws_security_group.db.id]
-  subnet_ids             = [var.subnet_ids]
+  subnet_ids             = var.subnet_ids
 
   name     = var.db_name
   password = var.password
