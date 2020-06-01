@@ -28,3 +28,22 @@ variable "subnet_ids" {
   type = list(string)
 }
 
+variable "performance_insights_enabled" {
+  type    = bool
+  default = false
+}
+
+variable "performance_insights_retention_period" {
+  type    = number
+  default = 7
+}
+
+variable "replicate_source_db" {
+  type    = string
+  default = ""
+}
+
+variable "publicly_accessible" {
+  type    = bool
+  default = false
+}

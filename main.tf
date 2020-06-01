@@ -2,21 +2,26 @@ module "rds" {
   source  = "terraform-aws-modules/rds/aws"
   version = "2.13.0"
 
-  identifier         = "${var.db_name}-db"
-  allocated_storage  = 5
-  backup_window      = "03:00-06:00"
-  engine             = "mysql"
-  engine_version     = "5.7"
-  maintenance_window = "Mon:00:00-Mon:03:00"
+  identifier                            = "${var.db_name}-db"
+  allocated_storage                     = 5
+  backup_window                         = "03:00-06:00"
+  engine                                = "mysql"
+  engine_version                        = "5.7"
+  maintenance_window                    = "Mon:00:00-Mon:03:00"
+  performance_insights_enabled          = var.performance_insights_enabled
+  performance_insights_retention_period = var.performance_insights_retention_period
+  monitoring_interval                   = "30"
+  monitoring_role_arn                   = aws_iam_role.rds_enhanced_monitoring.arn
+  replicate_source_db                   = var.replicate_source_db
 
-  instance_class          = var.instance_class
-  publicly_accessible     = true
-  backup_retention_period = 1
-  major_engine_version    = "5.7"
-  multi_az = true
-  skip_final_snapshot = false
+  instance_class            = var.instance_class
+  publicly_accessible       = var.publicly_accessible
+  backup_retention_period   = 1
+  major_engine_version      = "5.7"
+  multi_az                  = true
+  skip_final_snapshot       = false
   final_snapshot_identifier = "${var.db_name}-db-snpshot"
-  deletion_protection = true
+  deletion_protection       = true
 
   vpc_security_group_ids = [aws_security_group.db.id]
   subnet_ids             = var.subnet_ids
@@ -91,3 +96,27 @@ resource "aws_security_group_rule" "db" {
   security_group_id = aws_security_group.db.id
 }
 
+resource "aws_iam_role" "rds_enhanced_monitoring" {
+  name_prefix        = "rds-enhanced-monitoring-"
+  assume_role_policy = data.aws_iam_policy_document.rds_enhanced_monitoring.json
+}
+
+resource "aws_iam_role_policy_attachment" "rds_enhanced_monitoring" {
+  role       = aws_iam_role.rds_enhanced_monitoring.name
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonRDSEnhancedMonitoringRole"
+}
+
+data "aws_iam_policy_document" "rds_enhanced_monitoring" {
+  statement {
+    actions = [
+      "sts:AssumeRole",
+    ]
+
+    effect = "Allow"
+
+    principals {
+      type        = "Service"
+      identifiers = ["monitoring.rds.amazonaws.com"]
+    }
+  }
+}
