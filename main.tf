@@ -19,7 +19,7 @@ module "rds" {
   backup_retention_period   = 1
   major_engine_version      = "5.7"
   multi_az                  = true
-  skip_final_snapshot       = false
+  skip_final_snapshot       = var.skip_final_snapshot
   final_snapshot_identifier = "${var.db_name}-db-snpshot"
   deletion_protection       = true
 

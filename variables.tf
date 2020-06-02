@@ -47,3 +47,7 @@ variable "publicly_accessible" {
   type    = bool
   default = false
 }
+variable "skip_final_snapshot" {
+  type    = bool
+  default = true
+}

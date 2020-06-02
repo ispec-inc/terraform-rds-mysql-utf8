@@ -11,7 +11,7 @@ module "rds-mysql-utf8" {
   port                                  = 3306
   username                              = "test_user"
   password                              = "remember_test_user"
-  db_name                               = "testyamad"
+  db_name                               = "test"
   instance_class                        = "db.t2.medium"
   performance_insights_enabled          = true
   performance_insights_retention_period = 7
@@ -31,10 +31,11 @@ module "rds-mysql-utf8-replica" {
   port                = 3306
   username            = "test_user"
   password            = "remember_test_user"
-  db_name             = "testyamadreplica"
+  db_name             = "testreplica"
   instance_class      = "db.t2.micro"
   replicate_source_db = module.rds-mysql-utf8.this_db_arn
   publicly_accessible = false
+  skip_final_snapshot = true
 
   vpc_id = aws_vpc.test_vpc.id
 

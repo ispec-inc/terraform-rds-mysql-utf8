@@ -11,7 +11,7 @@ module "rds-mysql-utf8" {
   port                = 3306
   username            = "test_user"
   password            = "remember_test_user"
-  db_name             = "testyamadstaging"
+  db_name             = "teststaging"
   instance_class      = "db.t2.micro"
   publicly_accessible = true
 
