@@ -29,25 +29,30 @@ variable "subnet_ids" {
 }
 
 variable "performance_insights_enabled" {
-  type    = bool
-  default = false
+  description = "Specifies whether Performance Insights are enabled."
+  type        = bool
+  default     = false
 }
 
 variable "performance_insights_retention_period" {
-  type    = number
-  default = 7
+  description = "The amount of time in days to retain Performance Insights data."
+  type        = number
+  default     = 7
 }
 
 variable "replicate_source_db" {
-  type    = string
-  default = ""
+  description = "Specifies that this resource is a Replicate database"
+  type        = string
+  default     = ""
 }
 
 variable "publicly_accessible" {
-  type    = bool
-  default = false
+  description = "Bool to control if instance is publicly accessible"
+  type        = bool
+  default     = false
 }
 variable "skip_final_snapshot" {
-  type    = bool
-  default = true
+  description = "Determines whether a final DB snapshot is created before the DB instance is deleted."
+  type        = bool
+  default     = true
 }
