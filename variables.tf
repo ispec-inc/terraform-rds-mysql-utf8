@@ -54,5 +54,5 @@ variable "publicly_accessible" {
 variable "skip_final_snapshot" {
   description = "Determines whether a final DB snapshot is created before the DB instance is deleted."
   type        = bool
-  default     = true
+  default     = false
 }
