@@ -8,11 +8,12 @@ module "rds-mysql-utf8" {
   #
   source = "../../"
 
-  port           = 3306
-  username       = "test_user"
-  password       = "remember_test_user"
-  db_name        = "test"
-  instance_class = "db.t2.micro"
+  port                = 3306
+  username            = "test_user"
+  password            = "remember_test_user"
+  db_name             = "teststaging"
+  instance_class      = "db.t2.micro"
+  publicly_accessible = true
 
   vpc_id = aws_vpc.test_vpc.id
 
